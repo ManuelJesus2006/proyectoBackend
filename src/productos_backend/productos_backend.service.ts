@@ -6,6 +6,7 @@ import { ProductoFilterBackendDto } from './dto/filter_productos_backend.dto';
 import { filter } from 'rxjs';
 import { Usuario } from 'src/auth_backend/entities/auth_backend.entity';
 import { PatchProductosBackendDto } from './dto/patch-productos_backend.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class ProductosBackendService {
@@ -51,7 +52,7 @@ export class ProductosBackendService {
   }
 
   //DELETE A WHOLE PRODUCT
-  async deleteById(id:number, api_key: string){
+  async deleteById(id:number, api_key: string, res: Response){
     if (!api_key) {
       throw new UnauthorizedException('An apiKey is required, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey')
     } else if (!(await this.apiKeyValid(api_key))) {
@@ -60,6 +61,7 @@ export class ProductosBackendService {
 
     try{
       await this.productsCollection.deleteOne({ id });
+      res.status(204).send();
     }catch(e){
       throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
     }
@@ -95,11 +97,13 @@ export class ProductosBackendService {
       if (patchProductosBackendDto.price) productToUpdate.price = patchProductosBackendDto.price
       if (patchProductosBackendDto.release_date) productToUpdate.release_date = patchProductosBackendDto.release_date
       if (patchProductosBackendDto.type) productToUpdate.type = patchProductosBackendDto.type
+      const { id: idViejo, _id, creation_date, update_date, ...rest } = productToUpdate; //Truco para desestructurar
 
       const productChanged = {
-        ...productToUpdate,
+        
         id: id,
         _id: productToUpdate._id,
+        ...rest,
         creation_date: productToUpdate.creation_date,
         update_date: new Date()
       }
@@ -140,9 +144,9 @@ export class ProductosBackendService {
       
     try {
       const productChanged = {
-        ...createProductosBackendDto,
-        id: id,
         _id: productToUpdate._id,
+        id: id,
+        ...createProductosBackendDto,
         creation_date: productToUpdate.creation_date,
         update_date: new Date()
       }
@@ -182,11 +186,11 @@ export class ProductosBackendService {
       const newId = lastProduct ? lastProduct.id + 1 : 1
 
       const newProduct = {
+        _id: undefined, //Ponemos undefined para que astradb lo gestione solo
+        id: newId,
         ...createProductosBackendDto,
         creation_date: new Date(),
-        update_date: new Date(),
-        id: newId,
-        _id: undefined //Ponemos undefined para que astradb lo gestione solo
+        update_date: new Date()
       }
 
       const resultado = await this.productsCollection.insertOne(newProduct);

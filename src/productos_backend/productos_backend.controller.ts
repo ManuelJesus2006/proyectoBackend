@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query, Headers, Res } from '@nestjs/common';
 import { ProductosBackendService } from './productos_backend.service';
 import { CreatePutProductosBackendDto } from './dto/create-put-productos_backend.dto';
-import { Producto } from './entities/productos_backend.entity';
 import { ProductoFilterBackendDto } from './dto/filter_productos_backend.dto';
 import { PatchProductosBackendDto } from './dto/patch-productos_backend.dto';
+import type { Response } from 'express';
 
 @Controller('api/v1/techProducts')
 export class ProductosBackendController {
@@ -23,7 +23,6 @@ export class ProductosBackendController {
   findById(@Param('id') id: string, @Headers('api_key') api_key:string) {
     return this.productosBackendService.findById(+id, api_key);
   }
-
   
 
   @Put(':id')
@@ -37,8 +36,8 @@ export class ProductosBackendController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @Headers('api_key') api_key:string) {
-    return this.productosBackendService.deleteById(+id, api_key);
+  remove(@Param('id') id: string, @Headers('api_key') api_key:string, @Res() res: Response) {
+    return this.productosBackendService.deleteById(+id, api_key, res);
   }
 
   

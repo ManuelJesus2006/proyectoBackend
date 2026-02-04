@@ -41,7 +41,7 @@ export class CreatePutProductosBackendDto {
         description: 'Category of the product' 
     })
     @IsEnum(ProductType, {
-        message: 'Product type is not valid. Options are: ' + Object.values(ProductType).join(', ')
+        message: 'Product type (type) was not introduced or not valid. Options are: ' + Object.values(ProductType).join(', ')
     })
     type: ProductType;
 
@@ -66,7 +66,7 @@ export class CreatePutProductosBackendDto {
     })
     @Type(() => Date)
     @IsDate({
-        message: 'The date format must be: YYYY-MM-DD'
+        message: 'relase_date is compulsory and the date format must be: YYYY-MM-DD'
     })
     release_date: Date;
 
