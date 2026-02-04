@@ -1,0 +1,482 @@
+[
+  {
+    "id": 1,
+    "business": "AMD",
+    "name": "Ryzen 7 5800X",
+    "type": "Processor",
+    "release_date": "2020-11-05",
+    "price": 249.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/51smqWKarCL.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "speed": "3.8Ghz",
+      "max_speed": "4.7Ghz",
+      "voltage": "105W"
+    }
+  },
+  {
+    "id": 2,
+    "business": "Intel",
+    "name": "Core i9-12900K",
+    "type": "Processor",
+    "release_date": "2021-04-11",
+    "price": 469.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/51x19d4dPuL._AC_UF894,1000_QL80_.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "speed": "3.2Ghz",
+      "max_speed": "5.2Ghz",
+      "voltage": "125W"
+    }
+  },
+  {
+    "id": 3,
+    "business": "NVIDIA",
+    "name": "GeForce RTX 3080",
+    "type": "Graphics Card",
+    "release_date": "2020-09-17",
+    "price": 699.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/61juKdIql1L.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "memory": "10GB GDDR6X",
+      "boost_clock": "1.71Ghz",
+      "tdp": "320W"
+    }
+  },
+  {
+    "id": 4,
+    "business": "AMD",
+    "name": "Radeon RX 6800 XT",
+    "type": "Graphics Card",
+    "release_date": "2020-11-18",
+    "price": 649.99,
+    "imageUrl": "https://img.pccomponentes.com/articles/34/346794/1191-gigabyte-amd-radeon-rx-6800-xt-gaming-oc-16gb-gddr6.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "memory": "16GB GDDR6",
+      "boost_clock": "2.25Ghz",
+      "tdp": "300W"
+    }
+  },
+  {
+    "id": 5,
+    "business": "ASUS",
+    "name": "ROG Strix X570-E",
+    "type": "Motherboard",
+    "release_date": "2019-07-07",
+    "price": 329.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/612H7RE4VYL._AC_UF894,1000_QL80_.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "socket": "AM4",
+      "chipset": "X570",
+      "form_factor": "ATX"
+    }
+  },
+  {
+    "id": 6,
+    "business": "MSI",
+    "name": "Z690 Pro-A",
+    "type": "Motherboard",
+    "release_date": "2021-04-11",
+    "price": 239.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/81hOEYd3L7L.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "socket": "LGA1700",
+      "chipset": "Z690",
+      "form_factor": "ATX"
+    }
+  },
+  {
+    "id": 7,
+    "business": "Corsair",
+    "name": "Vengeance LPX 16GB",
+    "type": "RAM",
+    "release_date": "2018-03-15",
+    "price": 59.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/61jRBRUfRWL._AC_UF894,1000_QL80_.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "speed": "3200Mhz",
+      "type": "DDR4",
+      "voltage": "1.35V"
+    }
+  },
+  {
+    "id": 8,
+    "business": "G.Skill",
+    "name": "Trident Z RGB 32GB",
+    "type": "RAM",
+    "release_date": "2019-06-10",
+    "price": 129.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/61l4EStxhnL._AC_UF894,1000_QL80_.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "speed": "3600Mhz",
+      "type": "DDR4",
+      "voltage": "1.35V"
+    }
+  },
+  {
+    "id": 9,
+    "business": "Samsung",
+    "name": "970 EVO Plus 1TB",
+    "type": "SSD",
+    "release_date": "2019-01-22",
+    "price": 89.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/71OYNmVRFhL.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "interface": "NVMe",
+      "speed_read": "3500MB/s",
+      "speed_write": "3300MB/s"
+    }
+  },
+  {
+    "id": 10,
+    "business": "Western Digital",
+    "name": "WD Black SN850 1TB",
+    "type": "SSD",
+    "release_date": "2020-11-05",
+    "price": 285,
+    "imageUrl": "https://m.media-amazon.com/images/I/61PLv0u5zBL.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "interface": "NVMe",
+      "speed_read": "7000MB/s",
+      "speed_write": "5300MB/s"
+    }
+  },
+  {
+    "id": 11,
+    "business": "Seagate",
+    "name": "Barracuda 2TB",
+    "type": "HDD",
+    "release_date": "2016-05-01",
+    "price": 49.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/71Czt9ypIbL.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "rpm": "7200",
+      "cache": "256MB",
+      "interface": "SATA 6Gb/s"
+    }
+  },
+  {
+    "id": 12,
+    "business": "Noctua",
+    "name": "NH-D15",
+    "type": "CPU Cooler",
+    "release_date": "2014-04-08",
+    "price": 89.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/91t48GBv8TL.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "fans": "2x 140mm",
+      "noise": "24.6dB",
+      "height": "165mm"
+    }
+  },
+  {
+    "id": 13,
+    "business": "Cooler Master",
+    "name": "Hyper 212 Black Edition",
+    "type": "CPU Cooler",
+    "release_date": "2019-01-15",
+    "price": 39.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/81P-WD4rgmL._AC_UF894,1000_QL80_.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "fan": "120mm",
+      "noise": "26dB",
+      "height": "158mm"
+    }
+  },
+  {
+    "id": 14,
+    "business": "EVGA",
+    "name": "SuperNOVA 750 G5",
+    "type": "Power Supply",
+    "release_date": "2019-08-20",
+    "price": 119.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/71HHpGHjI+L._AC_UF894,1000_QL80_.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "wattage": "750W",
+      "efficiency": "80+ Gold",
+      "modular": "Full"
+    }
+  },
+  {
+    "id": 15,
+    "business": "Corsair",
+    "name": "RM850x",
+    "type": "Power Supply",
+    "release_date": "2021-05-25",
+    "price": 139.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/61eKAbgBZRL.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "wattage": "850W",
+      "efficiency": "80+ Gold",
+      "modular": "Full"
+    }
+  },
+  {
+    "id": 16,
+    "business": "ASRock",
+    "name": "B550 Steel Legend",
+    "type": "Motherboard",
+    "release_date": "2020-01-16",
+    "price": 169.99,
+    "imageUrl": "https://www.hexxuz.com/api/Media/images/142399.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "socket": "AM4",
+      "chipset": "B550",
+      "form_factor": "ATX"
+    }
+  },
+  {
+    "id": 17,
+    "business": "Intel",
+    "name": "Core i5-12600K",
+    "type": "Processor",
+    "release_date": "2021-11-04",
+    "price": 249.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/51ac2uGoyqL._AC_UF350,350_QL80_.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "speed": "3.7Ghz",
+      "max_speed": "4.9Ghz",
+      "voltage": "125W"
+    }
+  },
+  {
+    "id": 18,
+    "business": "AMD",
+    "name": "Ryzen 5 5600X",
+    "type": "Processor",
+    "release_date": "2020-11-05",
+    "price": 169.99,
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBBcCy7UI-rfbTwCw2GdKVaP-W76ctTbQ8Qg&s",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "speed": "3.7Ghz",
+      "max_speed": "4.6Ghz",
+      "voltage": "65W"
+    }
+  },
+  {
+    "id": 19,
+    "business": "NVIDIA",
+    "name": "GeForce RTX 4070",
+    "type": "Graphics Card",
+    "release_date": "2023-04-13",
+    "price": 599.99,
+    "imageUrl": "https://media.ldlc.com/r1600/ld/products/00/06/03/07/LD0006030701.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "memory": "12GB GDDR6X",
+      "boost_clock": "2.48Ghz",
+      "tdp": "200W"
+    }
+  },
+  {
+    "id": 20,
+    "business": "AMD",
+    "name": "Radeon RX 7900 XT",
+    "type": "Graphics Card",
+    "release_date": "2022-12-13",
+    "price": 899.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/71DkqjW5gNL._AC_UF894,1000_QL80_.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "memory": "20GB GDDR6",
+      "boost_clock": "2.4Ghz",
+      "tdp": "300W"
+    }
+  },
+  {
+    "id": 21,
+    "business": "Kingston",
+    "name": "Fury Beast 16GB",
+    "type": "RAM",
+    "release_date": "2026-01-24",
+    "price": 129,
+    "imageUrl": "https://m.media-amazon.com/images/I/61Yc53OhY4L._AC_UF1000,1000_QL80_.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "speed": "3200Mhz",
+      "type": "DDR4",
+      "voltage": "1.35V"
+    }
+  },
+  {
+    "id": 22,
+    "business": "Crucial",
+    "name": "Ballistix 32GB",
+    "type": "RAM",
+    "release_date": "2020-02-04",
+    "price": 250.99,
+    "imageUrl": "https://thumb.pccomponentes.com/w-530-530/articles/38/387908/1380-crucial-ballistix-ddr4-3200mhz-pc4-25600-32gb-2x16gb-cl16-roja.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "speed": "3600Mhz",
+      "type": "DDR4",
+      "voltage": "1.35V"
+    }
+  },
+  {
+    "id": 23,
+    "business": "Gigabyte",
+    "name": "AORUS X670 Elite",
+    "type": "Motherboard",
+    "release_date": "2022-09-27",
+    "price": 289.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/71ubTinPcOL.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "socket": "AM5",
+      "chipset": "X670",
+      "form_factor": "ATX"
+    }
+  },
+  {
+    "id": 24,
+    "business": "Intel",
+    "name": "Core i7-13700K",
+    "type": "Processor",
+    "release_date": "2022-10-20",
+    "price": 419.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/515lU6LNpsL._AC_UF894,1000_QL80_.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "speed": "3.4Ghz",
+      "max_speed": "5.4Ghz",
+      "voltage": "125W"
+    }
+  },
+  {
+    "id": 25,
+    "business": "NVIDIA",
+    "name": "GeForce RTX 5060",
+    "type": "Graphics Card",
+    "release_date": "2025-05-19",
+    "price": 249.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/71edk5q7MPL.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "memory": "6GB GDDR6",
+      "boost_clock": "1.68Ghz",
+      "tdp": "160W"
+    }
+  },
+  {
+    "id": 26,
+    "business": "AMD",
+    "name": "Ryzen 9 7950X",
+    "type": "Processor",
+    "release_date": "2022-09-27",
+    "price": 589.99,
+    "imageUrl": "https://www.asusbymacman.es/33789-medium_default/amd-ryzen-9-7950x-am5-procesador.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "speed": "4.5Ghz",
+      "max_speed": "5.7Ghz",
+      "voltage": "170W"
+    }
+  },
+  {
+    "id": 27,
+    "business": "ASUS",
+    "name": "TUF Gaming B660M",
+    "type": "Motherboard",
+    "release_date": "2022-01-05",
+    "price": 149.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/71XXiBzjrKL.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "socket": "LGA1700",
+      "chipset": "B660",
+      "form_factor": "mATX"
+    }
+  },
+  {
+    "id": 28,
+    "business": "Seagate",
+    "name": "FireCuda 530 2TB",
+    "type": "SSD",
+    "release_date": "2021-07-29",
+    "price": 280.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/81ei+J+8ceL.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "interface": "NVMe",
+      "speed_read": "7300MB/s",
+      "speed_write": "6900MB/s"
+    }
+  },
+  {
+    "id": 29,
+    "business": "Be Quiet!",
+    "name": "Dark Rock Pro 4",
+    "type": "CPU Cooler",
+    "release_date": "2018-04-03",
+    "price": 79.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/61W28OM2zvL.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "fans": "2x 135mm",
+      "noise": "24.3dB",
+      "height": "162mm"
+    }
+  },
+  {
+    "id": 30,
+    "business": "EVGA",
+    "name": "SuperNOVA 1000 P3",
+    "type": "Power Supply",
+    "release_date": "2020-06-15",
+    "price": 199.99,
+    "imageUrl": "https://m.media-amazon.com/images/I/61Cu5QyHtnL._AC_UF1000,1000_QL80_.jpg",
+    "update_date": "2026-01-24",
+    "creation_date": "2026-01-24",
+    "characteristics": {
+      "wattage": "1000W",
+      "efficiency": "80+ Platinum",
+      "modular": "Full"
+    }
+  }
+]

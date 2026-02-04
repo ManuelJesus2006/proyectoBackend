@@ -1,0 +1,320 @@
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { CreatePutProductosBackendDto } from './dto/create-put-productos_backend.dto';
+import { AstraService } from 'src/database/database.provider';
+import { Producto } from './entities/productos_backend.entity';
+import { ProductoFilterBackendDto } from './dto/filter_productos_backend.dto';
+import { filter } from 'rxjs';
+import { Usuario } from 'src/auth_backend/entities/auth_backend.entity';
+import { PatchProductosBackendDto } from './dto/patch-productos_backend.dto';
+
+@Injectable()
+export class ProductosBackendService {
+  // showUserHelp() {
+  //   return {
+  //     message: `APIKEY:
+  //     In order to receive your apiKey you most signup going to POST /api/v1/techProducts/auth/signup and add your credentials like this:
+  //     {
+  //       "name":"(your name here)",
+  //       "email":"(your email here)",
+  //       "pass":"(your password here)"
+  //     }
+  //       Once done you will receive your api_key on the response. If you want to check it again you can go to POST /api/v1/techProducts/auth/signup and add your
+  //       credentials like this (and make sure are the correct ones):
+  //       {
+  //        "email":"(your email here)",
+  //        "pass":"(your password here)"
+  //     }
+  //        Once done you will receive your api_key on the response.
+  //        You must put your api_key on the headers
+
+  //     GET (receive products):
+  //     On GET /api/v1/techProducts/ You can recieve all the products from the database or use several filters which are business, name, type, price (max), 
+  //     sort (by release_date) and limit. 
+  //     You must put this filters on the params
+
+  //     On GET
+      
+  //     `
+      
+  //   }
+  // }
+
+  constructor(
+    private readonly astra: AstraService
+  ) { }
+
+  private get usuarioCollection() {
+    return this.astra.db.collection<Usuario>('users');
+  }
+  private get productsCollection() {
+    return this.astra.db.collection<Producto>('products');
+  }
+
+  //DELETE A WHOLE PRODUCT
+  async deleteById(id:number, api_key: string){
+    if (!api_key) {
+      throw new UnauthorizedException('An apiKey is required, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey')
+    } else if (!(await this.apiKeyValid(api_key))) {
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login`)
+    }
+
+    try{
+      await this.productsCollection.deleteOne({ id });
+    }catch(e){
+      throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
+    }
+
+  }
+
+  //PATCH UPDATE ONLY A FIELD FROM THE PRODUCT
+  async minorUpdate(id: number, patchProductosBackendDto: PatchProductosBackendDto, api_key: string) {
+    if (!api_key) {
+      throw new UnauthorizedException('An apiKey is required, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey')
+    } else if (!(await this.apiKeyValid(api_key))) {
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login`)
+    }
+    
+    const productToUpdate = await this.productsCollection.findOne({ id });
+    if (!productToUpdate) {
+      throw new NotFoundException(`There is no product with id: ${id}`);
+    }
+    //Cuenta los objetos que hay en el dto para comprobar si se ha introducido solo uno
+    const validFields = Object.keys(patchProductosBackendDto).filter(key => 
+      patchProductosBackendDto[key] !== undefined && patchProductosBackendDto[key] !== null
+    );
+
+    if (validFields.length > 1){
+      throw new BadRequestException('On this mode you must only put one field to update')
+    }
+    
+    try{
+      if (patchProductosBackendDto.business) productToUpdate.business = patchProductosBackendDto.business
+      if (patchProductosBackendDto.characteristics) productToUpdate.characteristics = patchProductosBackendDto.characteristics
+      if (patchProductosBackendDto.imageUrl) productToUpdate.imageUrl = patchProductosBackendDto.imageUrl
+      if (patchProductosBackendDto.name) productToUpdate.name = patchProductosBackendDto.name
+      if (patchProductosBackendDto.price) productToUpdate.price = patchProductosBackendDto.price
+      if (patchProductosBackendDto.release_date) productToUpdate.release_date = patchProductosBackendDto.release_date
+      if (patchProductosBackendDto.type) productToUpdate.type = patchProductosBackendDto.type
+
+      const productChanged = {
+        ...productToUpdate,
+        id: id,
+        _id: productToUpdate._id,
+        creation_date: productToUpdate.creation_date,
+        update_date: new Date()
+      }
+
+      const result = await this.productsCollection.findOneAndReplace(
+        { id: id },
+        productChanged,
+        { returnDocument: 'after' }
+      );
+      return {
+        message: `The product has been updated successfully`,
+        product: result
+      };
+
+    }catch(e){
+      throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
+    }
+    
+  }
+
+  //PUT UPDATE ALL FROM THE PRODUCT
+  async majorUpdateProduct(createProductosBackendDto: CreatePutProductosBackendDto, id: number, api_key: string) {
+    if (!api_key) {
+      throw new UnauthorizedException('An apiKey is required, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey')
+    } else if (!(await this.apiKeyValid(api_key))) {
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login`)
+    }
+
+    if (await this.existProductUpdate(createProductosBackendDto, id)) {
+      throw new BadRequestException(`The product name '${createProductosBackendDto.name}' corresponds to an existing one`)
+    }
+    const productToUpdate = await this.productsCollection.findOne({ id });
+    if (!productToUpdate) {
+      throw new NotFoundException(`There is no product with id: ${id}`);
+    }
+    //Como characteristics es opcional, si el usuario lo actualiza sin los characteristics se ponen los que ya estaban
+    if (!createProductosBackendDto.characteristics) createProductosBackendDto.characteristics = productToUpdate.characteristics
+      
+    try {
+      const productChanged = {
+        ...createProductosBackendDto,
+        id: id,
+        _id: productToUpdate._id,
+        creation_date: productToUpdate.creation_date,
+        update_date: new Date()
+      }
+
+      const result = await this.productsCollection.findOneAndReplace(
+        { id: id },
+        productChanged,
+        { returnDocument: 'after' }
+      );
+      return {
+        message: `The product has been updated successfully`,
+        product: result
+      };
+
+
+    } catch (e) {
+      throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
+    }
+
+  }
+
+
+  //POST CREATE PRODUCT
+  async createNewProduct(createProductosBackendDto: CreatePutProductosBackendDto, api_key: string) {
+    if (!api_key) {
+      throw new UnauthorizedException('An apiKey is required, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey')
+    } else if (!(await this.apiKeyValid(api_key))) {
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login`)
+    }
+    if (await this.existProduct(createProductosBackendDto)) {
+      throw new BadRequestException(`The product name '${createProductosBackendDto.name}' corresponds to an existing one`)
+    }
+    try {
+      
+      const lastProduct = await this.productsCollection.findOne({}, { sort: { id: -1 } });
+
+      const newId = lastProduct ? lastProduct.id + 1 : 1
+
+      const newProduct = {
+        ...createProductosBackendDto,
+        creation_date: new Date(),
+        update_date: new Date(),
+        id: newId,
+        _id: undefined //Ponemos undefined para que astradb lo gestione solo
+      }
+
+      const resultado = await this.productsCollection.insertOne(newProduct);
+
+      return {
+        message: 'Producto creado correctamente',
+        product: newProduct,
+        astraId: resultado.insertedId // El ID interno de Astra
+      };
+
+    } catch (e) {
+      throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
+    }
+  }
+
+  //GET ALL OR GET WITH FILTERS
+  async findAll(filters: ProductoFilterBackendDto, api_key: string) {
+
+    if (!api_key) {
+      throw new UnauthorizedException('An apiKey is required, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey')
+    } else if (!(await this.apiKeyValid(api_key))) {
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login`)
+    }
+
+    const allProducts = await this.productsCollection.find({}).toArray();
+    let filteredProducts = allProducts;
+
+    //Filtro por tipo
+    if (filters.type) {
+      filteredProducts = filteredProducts.filter((product) => product.type.toLowerCase().includes(filters.type.toLowerCase()));
+    }
+    //Filtro por empresa
+    if (filters.business) {
+      filteredProducts = filteredProducts.filter((product) => product.business.toLowerCase() == filters.business.toLowerCase());
+    }
+    //Límite de precio máximo
+    if (filters.price) {
+      filteredProducts = filteredProducts.filter((product) => product.price <= filters.price);
+    }
+
+    //Ordenación por fecha de lanzamiento
+    if (filters.sort) {
+      if (filters.sort.toLowerCase() === 'asc') {
+        filteredProducts = filteredProducts.sort((a, b) => {
+          const p1 = new Date(a.release_date).getTime();
+          const p2 = new Date(b.release_date).getTime();
+          return p1 - p2;
+        });
+      } else if (filters.sort.toLowerCase() === 'desc') {
+        filteredProducts = filteredProducts.sort((a, b) => {
+          const p1 = new Date(a.release_date).getTime();
+          const p2 = new Date(b.release_date).getTime();
+          return p2 - p1;
+        });
+      } else {
+        throw new BadRequestException("You should have inserted either 'asc' or 'desc'");
+      }
+    }
+
+    if (!filters.sort) {
+      filteredProducts = filteredProducts.sort((p1, p2) => p1.id - p2.id);//Este sort es por defecto en el caso de que 
+      // el usuario no haya querido ordenar por fecha de lanzamiento
+    }
+
+    if (filters.limit) {
+      filteredProducts = filteredProducts.slice(0, Number(filters.limit));
+    }
+
+    try {
+      if (filteredProducts.length > 0) return filteredProducts;
+      else throw new NotFoundException('No se han encontrado productos para los filtros introducidos')
+    } catch (e) {
+      throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
+    }
+
+  }
+
+  //GET BY ID
+  async findById(id: number, api_key: string) {
+    if (!api_key) {
+      throw new UnauthorizedException('An apiKey is required, please go to POST /api/v1/techProducts/auth/signup to create your account or go to POST /api/v1/techProducts/auth/login to view your apikey')
+    } else if (!(await this.apiKeyValid(api_key))) {
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: POST /api/v1/techProducts/auth/login`)
+    }
+    let productoEncontrado;
+
+    try {
+      productoEncontrado = await this.productsCollection.findOne({ id });
+    } catch (e) {
+      throw new InternalServerErrorException(`Error crítico de DB: ${e}`);
+    }
+
+    if (!productoEncontrado) {
+      throw new BadRequestException(`There is no product with the id: ${id}`);
+    }
+
+    return productoEncontrado;
+  }
+
+  //Función para revisar si un producto ya tiene el mismo nombre al crear
+  async existProduct(createProductosBackendDto: CreatePutProductosBackendDto) {
+    const allProducts: Producto[] = await this.productsCollection.find({}).toArray();
+    return allProducts.some((prod) => prod.name.trim().toLowerCase() === createProductosBackendDto.name.trim().toLowerCase());
+  }
+
+  //Función para revisar si un producto ya tiene el mismo nombre al actualizar (put o patch)
+  async existProductUpdate(createProductosBackendDto: CreatePutProductosBackendDto, idProduct: number) {
+    const allProducts: Producto[] = await this.productsCollection.find({}).toArray();
+    return allProducts.some((prod) => {
+      if (idProduct != prod.id) {
+        if (prod.name.trim().toLowerCase() === createProductosBackendDto.name.trim().toLowerCase()) {
+          return true
+        }
+      }
+      return false
+    }
+
+    );
+
+  }
+
+  //Funcion que revisa si la apiKey es de algún usuario de la base de datos y además es válida
+  async apiKeyValid(api_key: string) {
+    const user = await this.usuarioCollection.findOne({ api_key: api_key });
+    if (user) return true;
+    return false;
+  }
+}
+
+
+
