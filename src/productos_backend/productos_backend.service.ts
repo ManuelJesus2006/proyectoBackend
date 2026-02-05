@@ -54,9 +54,9 @@ export class ProductosBackendService {
   //DELETE A WHOLE PRODUCT
   async deleteById(id:number, api_key: string, res: Response){
     if (!api_key) {
-      throw new UnauthorizedException('An apiKey is required, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey')
+      throw new UnauthorizedException('An apiKey is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. If you wish, you can check the docs here: /api/v1/techProducts/docs')
     } else if (!(await this.apiKeyValid(api_key))) {
-      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login`)
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login or you can check the docs here: /api/v1/techProducts/docs`)
     }
 
     try{
@@ -71,9 +71,9 @@ export class ProductosBackendService {
   //PATCH UPDATE ONLY A FIELD FROM THE PRODUCT
   async minorUpdate(id: number, patchProductosBackendDto: PatchProductosBackendDto, api_key: string) {
     if (!api_key) {
-      throw new UnauthorizedException('An apiKey is required, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey')
+      throw new UnauthorizedException('An apiKey is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. If you wish, you can check the docs here: /api/v1/techProducts/docs')
     } else if (!(await this.apiKeyValid(api_key))) {
-      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login`)
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login or you can check the docs here: /api/v1/techProducts/docs`)
     }
     
     const productToUpdate = await this.productsCollection.findOne({ id });
@@ -127,9 +127,9 @@ export class ProductosBackendService {
   //PUT UPDATE ALL FROM THE PRODUCT
   async majorUpdateProduct(createProductosBackendDto: CreatePutProductosBackendDto, id: number, api_key: string) {
     if (!api_key) {
-      throw new UnauthorizedException('An apiKey is required, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey')
+      throw new UnauthorizedException('An apiKey is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. If you wish, you can check the docs here: /api/v1/techProducts/docs')
     } else if (!(await this.apiKeyValid(api_key))) {
-      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login`)
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login or you can check the docs here: /api/v1/techProducts/docs`)
     }
 
     if (await this.existProductUpdate(createProductosBackendDto, id)) {
@@ -172,9 +172,9 @@ export class ProductosBackendService {
   //POST CREATE PRODUCT
   async createNewProduct(createProductosBackendDto: CreatePutProductosBackendDto, api_key: string) {
     if (!api_key) {
-      throw new UnauthorizedException('An apiKey is required, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey')
+      throw new UnauthorizedException('An apiKey is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. If you wish, you can check the docs here: /api/v1/techProducts/docs')
     } else if (!(await this.apiKeyValid(api_key))) {
-      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login`)
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login or you can check the docs here: /api/v1/techProducts/docs`)
     }
     if (await this.existProduct(createProductosBackendDto)) {
       throw new BadRequestException(`The product name '${createProductosBackendDto.name}' corresponds to an existing one`)
@@ -209,11 +209,6 @@ export class ProductosBackendService {
   //GET ALL OR GET WITH FILTERS
   async findAll(filters: ProductoFilterBackendDto, api_key: string) {
 
-    if (!api_key) {
-      throw new UnauthorizedException('An apiKey is required, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey')
-    } else if (!(await this.apiKeyValid(api_key))) {
-      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login`)
-    }
 
     const allProducts = await this.productsCollection.find({}).toArray();
     let filteredProducts = allProducts;
@@ -259,8 +254,13 @@ export class ProductosBackendService {
       filteredProducts = filteredProducts.slice(0, Number(filters.limit));
     }
 
+    const cleanProducts = filteredProducts.map((product) => {
+      const { _id, ...rest } = product; // Sacamos _id aparte, nos quedamos con 'rest'
+      return rest;
+    });
+
     try {
-      if (filteredProducts.length > 0) return filteredProducts;
+      if (cleanProducts.length > 0) return cleanProducts;
       else throw new NotFoundException('No se han encontrado productos para los filtros introducidos')
     } catch (e) {
       throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
@@ -270,11 +270,7 @@ export class ProductosBackendService {
 
   //GET BY ID
   async findById(id: number, api_key: string) {
-    if (!api_key) {
-      throw new UnauthorizedException('An apiKey is required, please go to POST /api/v1/techProducts/auth/signup to create your account or go to POST /api/v1/techProducts/auth/login to view your apikey')
-    } else if (!(await this.apiKeyValid(api_key))) {
-      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: POST /api/v1/techProducts/auth/login`)
-    }
+
     let productoEncontrado;
 
     try {
@@ -287,7 +283,18 @@ export class ProductosBackendService {
       throw new BadRequestException(`There is no product with the id: ${id}`);
     }
 
-    return productoEncontrado;
+    return {
+      id: productoEncontrado.id,
+      business: productoEncontrado.business,
+      name: productoEncontrado.name,
+      type: productoEncontrado.type,
+      price: productoEncontrado.price,
+      imageUrl: productoEncontrado.imageUrl,
+      release_date: productoEncontrado.release_date,
+      characteristics: productoEncontrado.characteristics,
+      creation_date: productoEncontrado.creation_date,
+      update_date: productoEncontrado.update_date
+    };
   }
 
   //Función para revisar si un producto ya tiene el mismo nombre al crear
