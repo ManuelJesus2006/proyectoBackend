@@ -10,7 +10,5 @@ export class Usuario {
 
   api_key: string;
 
-  activeUser?: boolean; // Cambiado a boolean para que coincida con la lógica de "activo"
-
-  roles?: string[];
+  administrator: boolean
 }

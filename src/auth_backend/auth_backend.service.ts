@@ -25,12 +25,18 @@ export class AuthBackendService {
       const nuevoUsuario = {
         ...datos,
         pass: bcrypt.hashSync(pass, 10),
-        api_key: crypto.randomBytes(30).toString('hex')
+        api_key: crypto.randomBytes(30).toString('hex'),
+        administrator: false
       };
 
       await this.usuarioCollection.insertOne(nuevoUsuario);
 
-      return nuevoUsuario;
+      return {
+        message: "Your account has been created successfully",
+        "Welcome, your name is ": nuevoUsuario.name,
+        "Your email": nuevoUsuario.email,
+        "Your apikey: ": nuevoUsuario.api_key
+      };
 
     } catch (e) {
       if (e.status === 409) throw new BadRequestException('El usuario ya existe');
@@ -53,7 +59,11 @@ export class AuthBackendService {
         throw new UnauthorizedException('Usuario o contraseña no válidos');
       }
 
-      return userLogued;
+      return {
+        "Welcome, your name is ": userLogued.name,
+        "Your email": userLogued.email,
+        "Your apikey: ": userLogued.api_key
+      };
     } catch (e) {
       throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
     }

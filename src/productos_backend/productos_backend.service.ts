@@ -54,9 +54,9 @@ export class ProductosBackendService {
   //DELETE A WHOLE PRODUCT
   async deleteById(id:number, api_key: string, res: Response){
     if (!api_key) {
-      throw new UnauthorizedException('An apiKey is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. If you wish, you can check the docs here: /api/v1/techProducts/docs')
-    } else if (!(await this.apiKeyValid(api_key))) {
-      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login or you can check the docs here: /api/v1/techProducts/docs`)
+      throw new UnauthorizedException('An apiKey for administrators is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. After this contact the creator. If you wish, you can check the docs here: /api/v1/techProducts/docs')
+    } else if (!(await this.apiKeyValidAdmin(api_key))) {
+      throw new UnauthorizedException(`Your apikey is not an administrator one, contact the creator`)
     }
 
     try{
@@ -71,9 +71,9 @@ export class ProductosBackendService {
   //PATCH UPDATE ONLY A FIELD FROM THE PRODUCT
   async minorUpdate(id: number, patchProductosBackendDto: PatchProductosBackendDto, api_key: string) {
     if (!api_key) {
-      throw new UnauthorizedException('An apiKey is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. If you wish, you can check the docs here: /api/v1/techProducts/docs')
-    } else if (!(await this.apiKeyValid(api_key))) {
-      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login or you can check the docs here: /api/v1/techProducts/docs`)
+      throw new UnauthorizedException('An apiKey for administrators is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. After this contact the creator. If you wish, you can check the docs here: /api/v1/techProducts/docs')
+    } else if (!(await this.apiKeyValidAdmin(api_key))) {
+      throw new UnauthorizedException(`Your apikey is not an administrator one, contact the creator`)
     }
     
     const productToUpdate = await this.productsCollection.findOne({ id });
@@ -127,9 +127,9 @@ export class ProductosBackendService {
   //PUT UPDATE ALL FROM THE PRODUCT
   async majorUpdateProduct(createProductosBackendDto: CreatePutProductosBackendDto, id: number, api_key: string) {
     if (!api_key) {
-      throw new UnauthorizedException('An apiKey is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. If you wish, you can check the docs here: /api/v1/techProducts/docs')
-    } else if (!(await this.apiKeyValid(api_key))) {
-      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login or you can check the docs here: /api/v1/techProducts/docs`)
+      throw new UnauthorizedException('An apiKey for administrators is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. After this contact the creator. If you wish, you can check the docs here: /api/v1/techProducts/docs')
+    } else if (!(await this.apiKeyValidAdmin(api_key))) {
+      throw new UnauthorizedException(`Your apikey is not an administrator one, contact the creator`)
     }
 
     if (await this.existProductUpdate(createProductosBackendDto, id)) {
@@ -172,9 +172,9 @@ export class ProductosBackendService {
   //POST CREATE PRODUCT
   async createNewProduct(createProductosBackendDto: CreatePutProductosBackendDto, api_key: string) {
     if (!api_key) {
-      throw new UnauthorizedException('An apiKey is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. If you wish, you can check the docs here: /api/v1/techProducts/docs')
-    } else if (!(await this.apiKeyValid(api_key))) {
-      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login or you can check the docs here: /api/v1/techProducts/docs`)
+      throw new UnauthorizedException('An apiKey for administrators is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. After this contact the creator. If you wish, you can check the docs here: /api/v1/techProducts/docs')
+    } else if (!(await this.apiKeyValidAdmin(api_key))) {
+      throw new UnauthorizedException(`Your apikey is not an administrator one, contact the creator`)
     }
     if (await this.existProduct(createProductosBackendDto)) {
       throw new BadRequestException(`The product name '${createProductosBackendDto.name}' corresponds to an existing one`)
@@ -208,7 +208,11 @@ export class ProductosBackendService {
 
   //GET ALL OR GET WITH FILTERS
   async findAll(filters: ProductoFilterBackendDto, api_key: string) {
-
+    if (!api_key) {
+      throw new UnauthorizedException('An apiKey is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. If you wish, you can check the docs here: /api/v1/techProducts/docs')
+    } else if (!(await this.apiKeyValidUser(api_key))) {
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login or you can check the docs here: /api/v1/techProducts/docs`)
+    }
 
     const allProducts = await this.productsCollection.find({}).toArray();
     let filteredProducts = allProducts;
@@ -241,7 +245,7 @@ export class ProductosBackendService {
           return p2 - p1;
         });
       } else {
-        throw new BadRequestException("You should have inserted either 'asc' or 'desc'");
+        throw new BadRequestException("You should have inserted either 'asc' or 'desc' on the 'sort' param");
       }
     }
 
@@ -255,21 +259,20 @@ export class ProductosBackendService {
     }
 
     const cleanProducts = filteredProducts.map((product) => {
-      const { _id, ...rest } = product; // Sacamos _id aparte, nos quedamos con 'rest'
+      const { _id, ...rest } = product; // Sacamos el _id de astradb
       return rest;
     });
-
-    try {
       if (cleanProducts.length > 0) return cleanProducts;
-      else throw new NotFoundException('No se han encontrado productos para los filtros introducidos')
-    } catch (e) {
-      throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
-    }
-
+      else throw new NotFoundException('There are no products for the filters introduced')
   }
 
   //GET BY ID
   async findById(id: number, api_key: string) {
+    if (!api_key) {
+      throw new UnauthorizedException('An apiKey is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. If you wish, you can check the docs here: /api/v1/techProducts/docs')
+    } else if (!(await this.apiKeyValidUser(api_key))) {
+      throw new UnauthorizedException(`This apiKey is not valid, check it doing a login here: /api/v1/techProducts/auth/login or you can check the docs here: /api/v1/techProducts/docs`)
+    }
 
     let productoEncontrado;
 
@@ -319,9 +322,16 @@ export class ProductosBackendService {
 
   }
 
-  //Funcion que revisa si la apiKey es de algún usuario de la base de datos y además es válida
-  async apiKeyValid(api_key: string) {
+  //Funcion que revisa si la apiKey es de algún usuario de la base de datos que no es administrador y además es válida
+  async apiKeyValidUser(api_key: string) {
     const user = await this.usuarioCollection.findOne({ api_key: api_key });
+    if (user) return true;
+    return false;
+  }
+
+  //Funcion que revisa si la apiKey es de algún usuario de la base de datos que ES administrador y además es válida
+  async apiKeyValidAdmin(api_key: string) {
+    const user = await this.usuarioCollection.findOne({ api_key: api_key, administrator: true });
     if (user) return true;
     return false;
   }
