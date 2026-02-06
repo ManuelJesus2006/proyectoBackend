@@ -1,10 +1,13 @@
-import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateAuthBackendDto } from './dto/create-auth_backend.dto';
 import { Usuario } from './entities/auth_backend.entity';
 import { LoginAuthBackendDto } from './dto/login-auth.backend.dto';
 import bcrypt from 'bcryptjs';
 import { AstraService } from 'src/database/database.provider';
 import * as crypto from 'crypto';
+import { UpdateAuthBackendDto } from './dto/update-auth_backend.dto';
+import { NotFoundError } from 'rxjs';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthBackendService {
@@ -18,10 +21,65 @@ export class AuthBackendService {
     return this.astra.db.collection<Usuario>('users');
   }
 
-  async create(createAuthBackendDto: CreateAuthBackendDto) {
-    try {
-      const { pass, ...datos } = createAuthBackendDto;
+  async deleteOne(api_key: string, id: string, res: Response) {
+    if (!api_key) {
+      throw new UnauthorizedException('An apiKey for administrators is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. After this contact the creator. If you wish, you can check the docs here: /api/v1/techProducts/docs')
+    } else if (!(await this.apiKeyValidAdmin(api_key))) {
+      throw new UnauthorizedException(`Your apikey is either not an administrator one or not valid, contact the creator or the administrator`)
+    }
 
+    try {
+      await this.usuarioCollection.deleteOne({ _id: id });
+      res.status(204).send();
+    } catch (e) {
+      throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
+    }
+  }
+
+  async updateAdministratorFieldById(updateAuthBackendDto: UpdateAuthBackendDto, id: string, api_key: string) {
+    if (!api_key) {
+      throw new UnauthorizedException('An apiKey for administrators is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. After this contact the creator. If you wish, you can check the docs here: /api/v1/techProducts/docs')
+    } else if (!(await this.apiKeyValidAdmin(api_key))) {
+      throw new UnauthorizedException(`Your apikey is either not an administrator one or not valid, contact the creator or the administrator`)
+    }
+
+    const userToUpdate = await this.usuarioCollection.findOne({ _id: id })
+    if (!userToUpdate) {
+      throw new NotFoundException('The id you introduced does not correspond to any user')
+    }
+
+    try {
+      const updatedUser = {
+        ...userToUpdate,
+        administrator: updateAuthBackendDto.administrator
+      }
+      await this.usuarioCollection.findOneAndReplace({ _id: id }, updatedUser, { returnDocument: 'after' })
+      return updatedUser;
+    } catch (e) {
+      throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
+    }
+  }
+
+  async showAllUsers(api_key: string) {
+    if (!api_key) {
+      throw new UnauthorizedException('An apiKey for administrators is required to perform this operation, please go to /api/v1/techProducts/auth/signup to create your account or go to /api/v1/techProducts/auth/login to view your apikey. After this contact the creator. If you wish, you can check the docs here: /api/v1/techProducts/docs')
+    } else if (!(await this.apiKeyValidAdmin(api_key))) {
+      throw new UnauthorizedException(`Your apikey is either not an administrator one or not valid, contact the creator or the administrator`)
+    }
+
+    const allUsers = await this.usuarioCollection.find({}).toArray()
+    return allUsers
+  }
+
+  async create(createAuthBackendDto: CreateAuthBackendDto) {
+
+    const { pass, ...datos } = createAuthBackendDto;
+
+    const existeEmailUser = await this.usuarioCollection.findOne({ email: datos.email })
+    if (existeEmailUser) {
+      throw new ConflictException('The email you inserted already exists in an account, try changing it')
+    }
+    try {
       const nuevoUsuario = {
         ...datos,
         pass: bcrypt.hashSync(pass, 10),
@@ -39,7 +97,7 @@ export class AuthBackendService {
       };
 
     } catch (e) {
-      if (e.status === 409) throw new BadRequestException('El usuario ya existe');
+      if (e.status === 409) throw new BadRequestException('This user already exists');
 
       throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
     }
@@ -70,12 +128,12 @@ export class AuthBackendService {
 
   }
 
-  // async delete() {
-  //   await this.usuarioCollection.deleteOne({
-  //     _id: "28da6d81-4e1d-45ac-9a6d-814e1dc5ac79" // <--- EL ID QUE QUIERES BORRAR
-  //   });
-  // }
-
+  //Funcion que revisa si la apiKey es de algún usuario de la base de datos que ES administrador y además es válida
+  async apiKeyValidAdmin(api_key: string) {
+    const user = await this.usuarioCollection.findOne({ api_key: api_key, administrator: true });
+    if (user) return true;
+    return false;
+  }
   // findAll() {
   //   return `This action returns all authBackend`;
   // }

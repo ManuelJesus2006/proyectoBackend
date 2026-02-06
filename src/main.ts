@@ -48,7 +48,7 @@ async function bootstrap() {
   )
   const config = new DocumentBuilder()
     .setTitle('Tech Products API')
-    .setDescription('Documentación de la tienda de tecnología')
+    .setDescription('This is the guide for this API to receive products with different parametters. An account is needed for the apikey so for that there is an auth endpoint')
     .setVersion('1.0')
     .addApiKey({ 
        type: 'apiKey', 

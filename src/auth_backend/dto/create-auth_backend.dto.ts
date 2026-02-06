@@ -8,7 +8,7 @@ export class CreateAuthBackendDto {
         required: true
     })
     @IsEmail({}, {
-        message: 'The email format is invalid'
+        message: 'An email is compulsory and must have a valid format'
     })
     email: string;
 
@@ -17,7 +17,9 @@ export class CreateAuthBackendDto {
         description: 'Full name of the user',
         required: true
     })
-    @IsString()
+    @IsString({
+        message: 'A name is compulsory and must not be a number'
+    })
     name: string;
 
     @ApiProperty({ 
@@ -26,7 +28,9 @@ export class CreateAuthBackendDto {
         minLength: 5,
         required: true 
     })
-    @IsString()
+    @IsString({
+        message: 'A valid password is compulsory'
+    })
     @MinLength(5, {
         message: 'Password must be at least 5 characters long'
     })

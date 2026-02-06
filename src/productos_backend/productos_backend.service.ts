@@ -196,9 +196,8 @@ export class ProductosBackendService {
       const resultado = await this.productsCollection.insertOne(newProduct);
 
       return {
-        message: 'Producto creado correctamente',
-        product: newProduct,
-        astraId: resultado.insertedId // El ID interno de Astra
+        message: 'Producto created successfully',
+        product: newProduct
       };
 
     } catch (e) {
