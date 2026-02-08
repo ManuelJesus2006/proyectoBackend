@@ -216,6 +216,10 @@ export class ProductosBackendService {
     const allProducts = await this.productsCollection.find({}).toArray();
     let filteredProducts = allProducts;
 
+    //Filtro por nombre
+    if (filters.name) {
+      filteredProducts = filteredProducts.filter((product) => product.name.toLowerCase().includes(filters.name.toLowerCase()));
+    }
     //Filtro por tipo
     if (filters.type) {
       filteredProducts = filteredProducts.filter((product) => product.type.toLowerCase().includes(filters.type.toLowerCase()));
