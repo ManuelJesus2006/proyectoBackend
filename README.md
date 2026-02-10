@@ -72,24 +72,27 @@ After this step, we go back to VSCode and create on the root folder an .env file
 
 Inside this .env file, you must introduce this two keys:
 
-<img width="667" height="209" alt="image" src="https://github.com/user-attachments/assets/74543453-929b-4774-ae9a-8b9e4fdd1346" />
+```bash
+ASTRA_DB_ENDPOINT=(AstraDB URL)
+ASTRA_DB_APPLICATION_TOKEN=(AstraCS token)
+```
 
 
 Finally, you need to find the URL of the database and the AstraCS token and put on the key of the .env file
 
 You can find the URL up on the title of the database created, click on it and copy it:
 
-<img width="965" height="786" alt="image" src="https://github.com/user-attachments/assets/1790a870-88e4-4b78-89b2-c578a531a087" />
+<img width="970" height="792" alt="image" src="https://github.com/user-attachments/assets/4879ff46-0ae9-45af-a4ae-bd609c638198" />
 
 
 The AstraCS token is located on the "Overview" of your database, click on "Generate a token" button and introduce the name of your token and generate it:
 
-<img width="1383" height="807" alt="image" src="https://github.com/user-attachments/assets/6360f9a8-7b52-4102-af94-68af34af46da" />
+<img width="1015" height="593" alt="image" src="https://github.com/user-attachments/assets/0bacbf4c-95a1-48db-8c8b-01d009dbb7a0" />
 
 <img width="847" height="334" alt="image" src="https://github.com/user-attachments/assets/eafa7634-1fdd-470e-9097-3811f9aa24b3" />
 
 
-It will generate the token instantly, you know need to copy it using the button at the far right:
+It will generate the token instantly, you now need to copy it using the button at the far right:
 
 <img width="850" height="134" alt="image" src="https://github.com/user-attachments/assets/456cae64-f8f8-4c98-8931-d89e7d28d2c9" />
 
@@ -114,13 +117,13 @@ Then, open the Windows CMD on the VSCode Terminal:
 <img width="433" height="367" alt="image" src="https://github.com/user-attachments/assets/c76154ab-e2dc-47a3-9574-2f0cd30aa8b8" />
 
 
-After this step, you know must put the next command and click enter:
+After this step, you now must put the next command and click enter:
 
 ```bash
 $ npm install
 ```
 
-This command will install the essential dependencies to execute the app. Finally, we move on to Compilation a running
+This command will install the essential dependencies to execute the app. Finally, we move on to Compilation and running
 
 ## Compile and run the project
 
@@ -143,6 +146,30 @@ This will start the api using your database. However, when you try to use it, yo
 <img width="494" height="600" alt="image" src="https://github.com/user-attachments/assets/33a7ade9-b687-43ec-bdd4-fb1d7fcaa7c3" />
 
 You will need to login first in order to use this api. The software is configured so that the first person to register (you) becomes the administrator. Once there is at least one administrator, any subsequent users will not have admin privileges. This ensures that you can use your API key to manage products and users, while other users cannot.
+
+## Proof of the admin functionality
+
+Take this as a proof, we are going to signup on api/v1/techProducts/auth/signup:
+
+<img width="513" height="608" alt="image" src="https://github.com/user-attachments/assets/689999a7-9f48-4bde-b992-f333212f51b3" />
+
+It shows that it has been created successfully. Then we put the apikey on headers just like this:
+
+<img width="412" height="261" alt="image" src="https://github.com/user-attachments/assets/65f76686-0f7b-43cc-8ddc-db0a92fcf7ad" />
+
+
+Now if we try the API with the apikey generated on whatever administrator action (like viewing all users), we see that it works so it means we are administrators:
+
+
+<img width="507" height="679" alt="image" src="https://github.com/user-attachments/assets/633206a8-5b63-47d7-b591-dbc3c931ab19" />
+
+Now we create another account:
+
+<img width="507" height="626" alt="image" src="https://github.com/user-attachments/assets/169c8d8c-3921-4f61-a78f-d2a28e57d4ef" />
+
+If we try again with the same endpoint of viewing all users with the new apikey, we can see that it won't work, meaning the new user is NOT an administrator:
+
+<img width="523" height="561" alt="image" src="https://github.com/user-attachments/assets/72b0e535-cb39-468e-8b19-8b644c546a23" />
 
 
 ## Resources
