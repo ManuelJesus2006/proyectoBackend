@@ -120,46 +120,30 @@ After this step, you know must put the next command and click enter:
 $ npm install
 ```
 
+This command will install the essential dependencies to execute the app. Finally, we move on to Compilation a running
+
 ## Compile and run the project
 
 Now the final step, initiate the API. You can do it with whichever of this commands:
 
+This command will start directly de API and no changes will be saved until you execute this again:
 ```bash
 # development
 $ npm run start
+```
 
+This command will start directly de API and the changes will be saved without executing:
+```bash
 # watch mode
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Run tests
+This will start the api using your database. However, when you try to use it, you will need to signup according to the initial error message:
 
-```bash
-# unit tests
-$ npm run test
+<img width="494" height="600" alt="image" src="https://github.com/user-attachments/assets/33a7ade9-b687-43ec-bdd4-fb1d7fcaa7c3" />
 
-# e2e tests
-$ npm run test:e2e
+You will need to login first in order to use this api. The software is configured so that the first person to register (you) becomes the administrator. Once there is at least one administrator, any subsequent users will not have admin privileges. This ensures that you can use your API key to manage products and users, while other users cannot.
 
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
 ## Resources
 
