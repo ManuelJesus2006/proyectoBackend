@@ -1,3 +1,4 @@
+This project has been realised with these technologies:
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -23,15 +24,105 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Welcome to my TechProductsAPI! This API is 100% made by me using NestJS with pure Typescript. In order to use my API Software on a local device with Windows, you need to read carefully to these steps (WARNING: The images are on Windows in Spanish language, if you aren't Spanish follow the instructions in English):
+
+## Downloads and First Steps
+
+The first thing to do is downloading the whole project:
+
+<img width="462" height="348" alt="image" src="https://github.com/user-attachments/assets/c6403eb0-51f1-44e5-8525-31e41b1e83d6" />
+
+
+After this, extract the project on a suitable folder on your pc hard drive by making right click and "Extract Here" (preferably on C:/):
+
+<img width="627" height="153" alt="image" src="https://github.com/user-attachments/assets/9081ae8e-3bdd-485f-8d05-a49316105bfe" />
+
+
+Once extracted, open the extracted folder on VSCode by making right click and "Open on VSCode" (if you don't have this software, here is the download link: https://code.visualstudio.com/)
+
+<img width="471" height="157" alt="image" src="https://github.com/user-attachments/assets/4a327fb0-dc92-4ea6-9861-4e1776fe2918" />
+
+
+If you now have the folder on VSCode, you must install NodeJS (https://nodejs.org/es/download): 
+
+<img width="864" height="670" alt="image" src="https://github.com/user-attachments/assets/ca52cc87-0dd4-4a0a-9994-3d0f11f0f09b" />
+
+When the installation of NodeJS finish, if you had opened VSCode BEFORE the installation, you now MUST CLOSE VSCODE after doing anything else, because you can not use the VSCode Terminal until it has been restarted to refresh the environment variables. Then open the extracted folder with VSCode again. Now, we move on to the database configuration
+
+## Database Configuration
+
+This API with Nest works entirely with Datastax AstraDB (Cassandra) and in order to use this API in a local device you MUST create an account on AstraDB to have your own free database. So firstly, you need to go to AstraDB oficial website and create an account: https://astra.datastax.com/
+
+Once finished, you should click on the "Create database" button and create the database with the name you seem more suitable and use the SAME CONFIGURATION as the image shows:
+
+<img width="926" height="535" alt="image" src="https://github.com/user-attachments/assets/d3608654-c509-495f-97ed-d9135802bd18" />
+
+
+You know need to wait for a few minutes as the database creates and activates. You need to take into account that this free version is limited on monthly credits of around 25 dollars, a storage cap of 40GB, and a limited number of read and write operations. Also, you might experience cold starts with slower responses after inactivity, you can only use one region, and there is a limit of 8192 dimensions for vector searches.
+
+When the database finally activates, go to "Data Explorer" and create two new collections with the EXACT name of "products" and "users" and keep the other parameters the SAME as the image shows:
+
+<img width="929" height="719" alt="image" src="https://github.com/user-attachments/assets/283b4d84-ff7e-4a9e-b01f-a3aa862f449d" />
+
+
+After this step, we go back to VSCode and create on the root folder an .env file:
+
+<img width="303" height="391" alt="image" src="https://github.com/user-attachments/assets/72d7da5b-2c84-473a-8141-e1009fa41da1" />
+
+
+Inside this .env file, you must introduce this two keys:
+
+<img width="667" height="209" alt="image" src="https://github.com/user-attachments/assets/74543453-929b-4774-ae9a-8b9e4fdd1346" />
+
+
+Finally, you need to find the URL of the database and the AstraCS token and put on the key of the .env file
+
+You can find the URL up on the title of the database created, click on it and copy it:
+
+<img width="965" height="786" alt="image" src="https://github.com/user-attachments/assets/1790a870-88e4-4b78-89b2-c578a531a087" />
+
+
+The AstraCS token is located on the "Overview" of your database, click on "Generate a token" button and introduce the name of your token and generate it:
+
+<img width="1383" height="807" alt="image" src="https://github.com/user-attachments/assets/6360f9a8-7b52-4102-af94-68af34af46da" />
+
+<img width="847" height="334" alt="image" src="https://github.com/user-attachments/assets/eafa7634-1fdd-470e-9097-3811f9aa24b3" />
+
+
+It will generate the token instantly, you know need to copy it using the button at the far right:
+
+<img width="850" height="134" alt="image" src="https://github.com/user-attachments/assets/456cae64-f8f8-4c98-8931-d89e7d28d2c9" />
+
+
+After copying both URL and AstraCS token, you only need to paste it on the .env file in the corresponding key:
+
+<img width="1138" height="215" alt="image" src="https://github.com/user-attachments/assets/276b2292-329f-4fb3-a032-bf43da9a17dd" />
+
+
+We have finished the database configuration, now we move on to the Project Setup by using the VSCode Terminal
+
 
 ## Project setup
+
+Now, open the terminal as the image shows:
+
+<img width="831" height="385" alt="image" src="https://github.com/user-attachments/assets/e4ff7011-8ec4-4de3-a965-29bc34060c81" />
+
+
+Then, open the Windows CMD on the VSCode Terminal:
+
+<img width="433" height="367" alt="image" src="https://github.com/user-attachments/assets/c76154ab-e2dc-47a3-9574-2f0cd30aa8b8" />
+
+
+After this step, you know must put the next command and click enter:
 
 ```bash
 $ npm install
 ```
 
 ## Compile and run the project
+
+Now the final step, initiate the API. You can do it with whichever of this commands:
 
 ```bash
 # development
