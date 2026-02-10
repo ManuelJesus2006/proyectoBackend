@@ -73,32 +73,38 @@ export class AuthBackendService {
 
   async create(createAuthBackendDto: CreateAuthBackendDto) {
 
+    let administratorValue;
     const { pass, ...datos } = createAuthBackendDto;
 
     const existeEmailUser = await this.usuarioCollection.findOne({ email: datos.email })
     if (existeEmailUser) {
       throw new ConflictException('The email you inserted already exists in an account, try changing it')
     }
+
+    const existAtleastAnAdmin = await this.usuarioCollection.findOne({ administrator: true })
+    if (!existAtleastAnAdmin) {
+      administratorValue = true
+    } else {
+      administratorValue = false
+    }
     try {
       const nuevoUsuario = {
         ...datos,
         pass: bcrypt.hashSync(pass, 10),
         api_key: crypto.randomBytes(30).toString('hex'),
-        administrator: false
+        administrator: administratorValue
       };
 
       await this.usuarioCollection.insertOne(nuevoUsuario);
 
       return {
         message: "Your account has been created successfully",
-        "Welcome, your name is ": nuevoUsuario.name,
-        "Your email": nuevoUsuario.email,
-        "Your apikey: ": nuevoUsuario.api_key
+        "name": nuevoUsuario.name,
+        "email": nuevoUsuario.email,
+        "apikey": nuevoUsuario.api_key
       };
 
     } catch (e) {
-      if (e.status === 409) throw new BadRequestException('This user already exists');
-
       throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
     }
   }
@@ -118,9 +124,9 @@ export class AuthBackendService {
       }
 
       return {
-        "Welcome, your name is ": userLogued.name,
-        "Your email": userLogued.email,
-        "Your apikey: ": userLogued.api_key
+        "name": userLogued.name,
+        "email": userLogued.email,
+        "apikey": userLogued.api_key
       };
     } catch (e) {
       throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
