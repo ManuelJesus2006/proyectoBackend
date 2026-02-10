@@ -67,8 +67,13 @@ export class AuthBackendService {
       throw new UnauthorizedException(`Your apikey is either not an administrator one or not valid, contact the creator or the administrator`)
     }
 
-    const allUsers = await this.usuarioCollection.find({}).toArray()
-    return allUsers
+    try {
+      const allUsers = await this.usuarioCollection.find({}).toArray()
+      return allUsers
+    } catch (e) {
+      throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
+    }
+
   }
 
   async create(createAuthBackendDto: CreateAuthBackendDto) {
@@ -136,9 +141,14 @@ export class AuthBackendService {
 
   //Funcion que revisa si la apiKey es de algún usuario de la base de datos que ES administrador y además es válida
   async apiKeyValidAdmin(api_key: string) {
-    const user = await this.usuarioCollection.findOne({ api_key: api_key, administrator: true });
-    if (user) return true;
-    return false;
+    try {
+      const user = await this.usuarioCollection.findOne({ api_key: api_key, administrator: true });
+      if (user) return true;
+      return false;
+    } catch (e) {
+      throw new InternalServerErrorException(`An error has ocurred, contact the creator. DETAILS: ${e}`)
+    }
+
   }
   // findAll() {
   //   return `This action returns all authBackend`;
