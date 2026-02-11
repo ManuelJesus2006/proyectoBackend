@@ -115,19 +115,19 @@ export class AuthBackendService {
   }
 
   async login(loginDto: LoginAuthBackendDto) {
+
+    const { pass, email } = loginDto;
+
+    const userLogued = await this.usuarioCollection.findOne({ email });
+
+    if (!userLogued) {
+      throw new UnauthorizedException('El email introducido no existe');
+    }
+
+    if (!bcrypt.compareSync(pass, userLogued.pass)) {
+      throw new UnauthorizedException('Usuario o contraseña no válidos');
+    }
     try {
-      const { pass, email } = loginDto;
-
-      const userLogued = await this.usuarioCollection.findOne({ email });
-
-      if (!userLogued) {
-        throw new UnauthorizedException('El email introducido no existe');
-      }
-
-      if (!bcrypt.compareSync(pass, userLogued.pass)) {
-        throw new UnauthorizedException('Usuario o contraseña no válidos');
-      }
-
       return {
         "name": userLogued.name,
         "email": userLogued.email,
