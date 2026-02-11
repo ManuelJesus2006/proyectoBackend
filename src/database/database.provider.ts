@@ -7,7 +7,6 @@ export class AstraService {
   public readonly db: Db;
 
   constructor() {
-    // Idealmente usa ConfigService para estas variables
     this.client = new DataAPIClient(process.env.ASTRA_DB_APPLICATION_TOKEN);
     this.db = this.client.db(process.env.ASTRA_DB_ENDPOINT!);
   }
