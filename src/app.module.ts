@@ -6,13 +6,10 @@ import { ProductosBackendModule } from './productos_backend/productos_backend.mo
 
 @Module({
   imports: [
-    // 1. Configuración de variables de entorno
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // 2. Tu nuevo módulo de conexión a Astra DB
     DatabaseModule,
 
-    // 3. Tus módulos de lógica de negocio
     AuthBackendModule,
 
     ProductosBackendModule,

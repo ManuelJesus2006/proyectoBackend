@@ -10,35 +10,6 @@ import { Response } from 'express';
 
 @Injectable()
 export class ProductosBackendService {
-  // showUserHelp() {
-  //   return {
-  //     message: `APIKEY:
-  //     In order to receive your apiKey you most signup going to POST /api/v1/techProducts/auth/signup and add your credentials like this:
-  //     {
-  //       "name":"(your name here)",
-  //       "email":"(your email here)",
-  //       "pass":"(your password here)"
-  //     }
-  //       Once done you will receive your api_key on the response. If you want to check it again you can go to POST /api/v1/techProducts/auth/signup and add your
-  //       credentials like this (and make sure are the correct ones):
-  //       {
-  //        "email":"(your email here)",
-  //        "pass":"(your password here)"
-  //     }
-  //        Once done you will receive your api_key on the response.
-  //        You must put your api_key on the headers
-
-  //     GET (receive products):
-  //     On GET /api/v1/techProducts/ You can recieve all the products from the database or use several filters which are business, name, type, price (max), 
-  //     sort (by release_date) and limit. 
-  //     You must put this filters on the params
-
-  //     On GET
-
-  //     `
-
-  //   }
-  // }
 
   constructor(
     private readonly astra: AstraService

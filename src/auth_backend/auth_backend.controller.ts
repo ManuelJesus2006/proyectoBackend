@@ -33,25 +33,4 @@ export class AuthBackendController {
   delete(@Headers('api_key') api_key:string, @Param('id') id: string, @Res() res: Response){
     return this.authBackendService.deleteOne(api_key, id,res);
   }
-
-
-  // @Get()
-  // findAll() {
-  //   return this.authBackendService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.authBackendService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateAuthBackendDto: UpdateAuthBackendDto) {
-  //   return this.authBackendService.update(+id, updateAuthBackendDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.authBackendService.remove(+id);
-  // }
 }
